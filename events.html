@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+	<head>
+		<title>RSA Encryption Algorithm</title>
+		<style>
+
+		</style>
+	</head>
+	<body>
+	p: <input id="p" type="number">
+	q: <input id="q" type="number">
+	n: <input id="nc">
+	
+	<h2 id="output"></h2>
+	<h2 id="keyOutput"></h2>
+	
+	<br><br><br>
+	
+	<hr>
+	<input id="enc">
+	<input id="dec">
+	
+	
+	
+	
+	
+	</body>
+</html>
+<script>
+var p = document.getElementById("p");
+var q = document.getElementById("q");
+var nc = document.getElementById("nc");
+var out = document.getElementById("output");
+var keys = document.getElementById("keyOutput");
+var e; //Public Key e
+var d; //Private Key d
+
+
+p.addEventListener("input", calcRsa);
+q.addEventListener("input", calcRsa);
+nc.addEventListener("input", calcRsa);
+
+
+function encrypt(){
+	var forEncrypt = +document.getElementById("enc").value;
+	var encrypted = (Math.pow(+forEncrypt, e)) % (+nc.value);
+	console.log(encrypted);
+}
+
+
+function decrypt(){
+	var forDecrypt = +document.getElementById("dec").value;
+	var decrypted = (Math.pow(+forDecrypt, d)) % (+nc.value);
+	console.log(decrypted);
+}
+
+
+
+
+
+
+
+function calcRsa(){
+	if (isPrime(p.value))
+	{
+		p.style.backgroundColor = "lightgreen";
+	} else {
+		p.style.backgroundColor = "red";
+	}
+	
+	if (isPrime(q.value))
+	{ 
+		q.style.backgroundColor = "lightblue";
+	} else {
+		q.style.backgroundColor = "red";
+	}
+	
+	if ((isPrime(p.value)==true) && (isPrime(q.value)==true))
+	{ 
+		nc.style.backgroundColor = "lightgreen";
+		nc.value = (+p.value * +q.value);
+	} else {
+		nc.style.backgroundColor = "red";
+	}
+	calE();
+	calD();
+	output();	
+
+
+
+}
+
+function calE(){
+		for (i=2; i < ((+p.value-1)*(+q.value-1)); i++){
+		if (((i%2) > 0) && (((+p.value-1)*(+q.value-1))%i > 0)){
+				e = i;
+			}
+	}
+}
+
+function output(){
+
+	
+	
+	var printOut = "p: " + p.value + "<br>q: " + q.value + "<br>n: " + nc.value + " (key length)<br>PHI: " + ((+p.value-1)*(+q.value-1)) + "<br>e: " + e;
+	out.innerHTML = printOut;
+	
+	var printKeys = "Public Key: (" + e + ", " + nc.value + ")<br>Private Key: (" + d + ", " + nc.value + ")";
+	keys.innerHTML = printKeys;
+	
+	
+	
+
+}
+
+
+function calD(){
+	for (i=9; i<=5000; i++){
+		if ((e * i)%((+p.value-1)*(+q.value-1))==1){
+			d = i;
+			console.log(i);
+			break;
+		}
+	}
+	
+}
+
+
+function isPrime(num) {
+  for(var i = 2; i < num; i++)
+    if(num % i === 0) return false;
+  return num !== 1;
+}
+
+
+
+
+
+</script>
+
+
+
+
